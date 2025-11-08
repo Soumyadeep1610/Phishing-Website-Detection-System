@@ -1,7 +1,22 @@
+# Python
 __pycache__/
-instance/
 *.pyc
-.env
-venv/
+*.pyo
+*.pyd
+*.env
+*.venv
+
+# Databases
 *.sqlite3
-.DS_Store
+*.db
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# ML / pickles (optional if you want to keep locally)
+*.pkl

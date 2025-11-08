@@ -13,3 +13,4 @@ virustotal-python==1.0.1
 Werkzeug==2.3.7
 gunicorn==21.2.0
 scikit-learn==1.3.2
+psycopg2-binary
