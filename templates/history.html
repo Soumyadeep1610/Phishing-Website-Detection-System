@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - PhishGuard</title>
+    <style>
+        :root {
+            --color-primary: #32B8C5;
+            --color-primary-hover: #2DA6B2;
+            --color-bg-dark: #1a1d3f;
+            --color-bg-darker: #13152e;
+            --color-bg-card: #262952;
+            --color-text: #ffffff;
+            --color-text-secondary: #a0a3c1;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        [data-theme="light"] {
+            --color-primary: #6c757d;
+            --color-primary-hover: #495057;
+            --color-bg-dark: #f0f0f0;
+            --color-bg-darker: #e0e0e0;
+            --color-bg-card: #ffffff;
+            --color-text: #333333;
+            --color-text-secondary: #666666;
+            --color-border: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background-color: var(--color-bg-darker);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lock-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f4a261, #e76f51);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--color-primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .history-section {
+            background-color: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .history-table th {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-phishing {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        .status-safe {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .feedback-btn {
+            background: none;
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .feedback-btn:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .no-history {
+            text-align: center;
+            color: var(--color-text-secondary);
+            font-size: 18px;
+            padding: 48px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav {
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .history-section {
+                padding: 24px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .history-table {
+                font-size: 14px;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 8px 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .lock-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 16px;
+            }
+
+            .nav {
+                gap: 12px;
+            }
+
+            .container {
+                padding: 16px 12px;
+            }
+
+            .history-section {
+                padding: 16px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .history-table {
+                font-size: 12px;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 6px 2px;
+            }
+
+            .status-badge {
+                padding: 2px 8px;
+                font-size: 11px;
+            }
+
+            .feedback-btn {
+                padding: 2px 6px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div>
+                <div class="logo">
+                    <div class="lock-icon">🔒</div>
+                    PhishGuard
+                </div>
+                <div class="tagline">Advanced AI + heuristics for URL safety</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('history') }}">History</a>
+            <a href="{{ url_for('learn') }}">Learn</a>
+            <div class="user-info">
+                <span class="user-email">{{ current_user.username[:2].upper() }}</span>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="history-section">
+            <h2 class="section-title">Your Check History</h2>
+            {% if checks %}
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
+                            <th>Timestamp</th>
+                            <th>Feedback</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for check in checks %}
+                        <tr>
+                            <td>{{ check.url }}</td>
+                            <td>
+                                {% if check.prediction == 'bad' %}
+                                <span class="status-badge status-phishing">Phishing</span>
+                                {% else %}
+                                <span class="status-badge status-safe">Safe</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ "%.1f"|format(check.confidence) }}%</td>
+                            <td>{{ check.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <button class="feedback-btn" onclick="submitFeedback({{ check.id }}, 'correct')">Correct</button>
+                                <button class="feedback-btn" onclick="submitFeedback({{ check.id }}, 'incorrect')">Incorrect</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="no-history">
+                    No checks found. Start by checking some URLs!
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer class="footer">
+        © 2025 PhishGuard — built by you.
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Function to submit feedback
+        async function submitFeedback(urlCheckId, feedbackType) {
+            try {
+                const response = await fetch(`/feedback/${urlCheckId}/${feedbackType}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    alert('Thank you for your feedback!');
+                } else {
+                    alert('Error submitting feedback. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting feedback. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

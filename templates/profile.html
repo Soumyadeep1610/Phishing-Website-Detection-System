@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - PhishGuard</title>
+    <style>
+        :root {
+            --color-primary: #32B8C5;
+            --color-primary-hover: #2DA6B2;
+            --color-bg-dark: #1a1d3f;
+            --color-bg-darker: #13152e;
+            --color-bg-card: #262952;
+            --color-text: #ffffff;
+            --color-text-secondary: #a0a3c1;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        [data-theme="light"] {
+            --color-primary: #6c757d;
+            --color-primary-hover: #495057;
+            --color-bg-dark: #f0f0f0;
+            --color-bg-darker: #e0e0e0;
+            --color-bg-card: #ffffff;
+            --color-text: #333333;
+            --color-text-secondary: #666666;
+            --color-border: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background-color: var(--color-bg-darker);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lock-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f4a261, #e76f51);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--color-primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .profile-card {
+            background-color: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 48px;
+            margin-bottom: 48px;
+        }
+
+        .card-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .profile-details {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .detail-label {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .delete-section {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .delete-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f44336;
+            margin-bottom: 16px;
+        }
+
+        .delete-description {
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav {
+                gap: 16px;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .profile-card {
+                padding: 24px;
+            }
+
+            .card-title {
+                font-size: 24px;
+            }
+
+            .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .lock-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 16px;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .profile-card {
+                padding: 16px;
+            }
+
+            .delete-section {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div>
+                <div class="logo">
+                    <div class="lock-icon">🔒</div>
+                    PhishGuard
+                </div>
+                <div class="tagline">Advanced AI + heuristics for URL safety</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('history') }}">History</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('learn') }}">Learn</a>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="profile-card">
+            <h1 class="card-title">Your Profile</h1>
+
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="detail-label">Username</span>
+                    <span class="detail-value">{{ current_user.username }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ current_user.email }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Role</span>
+                    <span class="detail-value">{{ current_user.role.title() }}</span>
+                </div>
+            </div>
+
+            <div class="delete-section">
+                <h2 class="delete-title">Danger Zone</h2>
+                <p class="delete-description">
+                    Deleting your account is permanent and cannot be undone. All your data, including check history and feedback, will be permanently removed.
+                </p>
+                <form method="POST" action="{{ url_for('delete_account') }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">
+                    <button type="submit" class="delete-button">Delete Account</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

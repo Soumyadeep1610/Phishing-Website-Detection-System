@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn About Phishing - PhishGuard</title>
+    <style>
+        :root {
+            --color-primary: #32B8C5;
+            --color-primary-hover: #2DA6B2;
+            --color-bg-dark: #1a1d3f;
+            --color-bg-darker: #13152e;
+            --color-bg-card: #262952;
+            --color-text: #ffffff;
+            --color-text-secondary: #a0a3c1;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        [data-theme="light"] {
+            --color-primary: #6c757d;
+            --color-primary-hover: #495057;
+            --color-bg-dark: #f0f0f0;
+            --color-bg-darker: #e0e0e0;
+            --color-bg-card: #ffffff;
+            --color-text: #333333;
+            --color-text-secondary: #666666;
+            --color-border: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background-color: var(--color-bg-darker);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lock-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f4a261, #e76f51);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--color-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .learn-section {
+            background-color: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 48px;
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--color-primary);
+        }
+
+        .section-content {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .learn-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .learn-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .learn-list li:before {
+            content: "•";
+            color: var(--color-primary);
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .learn-card {
+            background-color: var(--color-bg-darker);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .learn-card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--color-text);
+        }
+
+        .learn-card-content {
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav {
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .learn-section {
+                padding: 32px 24px;
+                margin-bottom: 24px;
+            }
+
+            .section-title {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .learn-list li {
+                padding: 10px 0;
+            }
+
+            .learn-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 16px;
+            }
+
+            .learn-card {
+                padding: 20px;
+            }
+
+            .learn-card-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .lock-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 16px;
+            }
+
+            .nav {
+                gap: 12px;
+            }
+
+            .container {
+                padding: 16px 12px;
+            }
+
+            .learn-section {
+                padding: 24px 16px;
+                margin-bottom: 16px;
+            }
+
+            .section-title {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+
+            .section-content {
+                margin-bottom: 16px;
+            }
+
+            .learn-list li {
+                padding: 8px 0;
+                font-size: 14px;
+            }
+
+            .learn-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .learn-card {
+                padding: 16px;
+            }
+
+            .learn-card-title {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .learn-card-content {
+                font-size: 14px;
+            }
+        }
+
+        /* Tablet responsiveness */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .container {
+                padding: 32px 20px;
+            }
+
+            .learn-section {
+                padding: 40px 32px;
+                margin-bottom: 28px;
+            }
+
+            .learn-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+            }
+
+            .learn-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div>
+                <div class="logo">
+                    <div class="lock-icon">🔒</div>
+                    PhishGuard
+                </div>
+                <div class="tagline">Advanced AI + heuristics for URL safety</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('learn') }}">Learn</a>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="learn-section">
+            <h1 class="section-title">What is Phishing?</h1>
+            <p class="section-content">
+                Phishing is a cyber attack where attackers try to trick you into giving sensitive information like passwords, credit card numbers, or personal data. They often do this by pretending to be a trustworthy entity in emails, websites, or messages.
+            </p>
+        </div>
+
+        <div class="learn-section">
+            <h2 class="section-title">Common Signs of Phishing</h2>
+            <ul class="learn-list">
+                <li>Unsolicited emails asking for personal information</li>
+                <li>URLs that don't match the legitimate website</li>
+                <li>Urgent requests for immediate action</li>
+                <li>Poor grammar or spelling in official-looking communications</li>
+                <li>Requests for sensitive information via email or phone</li>
+                <li>Unexpected attachments or links</li>
+            </ul>
+        </div>
+
+        <div class="learn-section">
+            <h2 class="section-title">How to Protect Yourself</h2>
+            <ul class="learn-list">
+                <li>Verify the sender's email address</li>
+                <li>Hover over links to see the actual URL</li>
+                <li>Use two-factor authentication</li>
+                <li>Keep your software and antivirus up to date</li>
+                <li>Don't click on suspicious links or download unknown attachments</li>
+                <li>Report suspicious emails to your IT department or email provider</li>
+            </ul>
+        </div>
+
+        <div class="learn-section">
+            <h2 class="section-title">Types of Phishing Attacks</h2>
+            <div class="learn-grid">
+                <div class="learn-card">
+                    <h3 class="learn-card-title">Email Phishing</h3>
+                    <p class="learn-card-content">The most common type, where attackers send fraudulent emails pretending to be from legitimate organizations.</p>
+                </div>
+                <div class="learn-card">
+                    <h3 class="learn-card-title">Spear Phishing</h3>
+                    <p class="learn-card-content">Targeted attacks on specific individuals or organizations, using personalized information.</p>
+                </div>
+                <div class="learn-card">
+                    <h3 class="learn-card-title">Vishing</h3>
+                    <p class="learn-card-content">Voice phishing over the phone, where attackers call pretending to be from trusted organizations.</p>
+                </div>
+                <div class="learn-card">
+                    <h3 class="learn-card-title">Smishing</h3>
+                    <p class="learn-card-content">SMS phishing via text messages, often containing malicious links or urgent requests.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        © 2025 PhishGuard — built by you.
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

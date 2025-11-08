@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard - Advanced AI + heuristics for URL safety</title>
+    <style>
+        :root {
+            --color-primary: #32B8C5;
+            --color-primary-hover: #2DA6B2;
+            --color-bg-dark: #1a1d3f;
+            --color-bg-darker: #13152e;
+            --color-bg-card: #262952;
+            --color-text: #ffffff;
+            --color-text-secondary: #a0a3c1;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        [data-theme="light"] {
+            --color-primary: #6c757d;
+            --color-primary-hover: #495057;
+            --color-bg-dark: #f0f0f0;
+            --color-bg-darker: #e0e0e0;
+            --color-bg-card: #ffffff;
+            --color-text: #333333;
+            --color-text-secondary: #666666;
+            --color-border: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background-color: var(--color-bg-darker);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lock-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f4a261, #e76f51);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--color-primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .check-card {
+            background-color: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 48px;
+            margin-bottom: 48px;
+        }
+
+        .card-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .card-description {
+            color: var(--color-text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .url-input {
+            width: 100%;
+            min-height: 120px;
+            background-color: var(--color-bg-darker);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--color-text);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 24px;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .url-input::placeholder {
+            color: var(--color-text-secondary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-analyze {
+            flex: 1;
+            background-color: var(--color-primary);
+            color: var(--color-bg-darker);
+        }
+
+        .btn-analyze:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            padding: 14px 28px;
+            background-color: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .results-section {
+            background-color: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 48px;
+            margin-bottom: 48px;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .result-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .result-icon.safe {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .result-icon.danger {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .result-url {
+            color: var(--color-text-secondary);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .detail-item {
+            background-color: var(--color-bg-darker);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav {
+                gap: 16px;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .check-card, .results-section {
+                padding: 24px;
+            }
+
+            .card-title {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .result-details {
+                grid-template-columns: 1fr;
+            }
+
+            .result-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .lock-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 16px;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .check-card, .results-section {
+                padding: 16px;
+            }
+
+            .url-input {
+                min-height: 100px;
+                padding: 12px;
+            }
+
+            .result-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .result-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div>
+                <div class="logo">
+                    <div class="lock-icon">🔒</div>
+                    PhishGuard
+                </div>
+                <div class="tagline">Advanced AI + heuristics for URL safety</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <div class="user-info">
+                    <span class="user-email">{{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+            <a href="{{ url_for('learn') }}">Learn</a>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="check-card">
+            <h1 class="card-title">Check a website</h1>
+            <p class="card-description">
+                Paste a URL (include http:// or https://). You can also paste multiple URLs (one per line) and press Analyze.
+            </p>
+
+            <form method="POST" action="{{ url_for('index') }}">
+                <textarea
+                    name="url"
+                    class="url-input"
+                    placeholder="http://gmail-login-service.co"
+                    required
+                ></textarea>
+
+                <div class="button-group" style="flex-direction: column; gap: 12px;">
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 8px; color: var(--color-text-secondary); font-size: 14px;">
+                            <input type="checkbox" name="enable_advanced" style="margin: 0;"> Enable Advanced Checks (SSL, Domain Age)
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; color: var(--color-text-secondary); font-size: 14px;">
+                            <input type="checkbox" name="enable_vt" style="margin: 0;"> Enable VirusTotal Scan (requires API key)
+                        </label>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button type="submit" class="btn btn-analyze">Analyze</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearInput()">Clear</button>
+                        <button type="button" class="btn btn-secondary" onclick="exportResults()">Export</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if results %}
+        {% for result in results %}
+        <div class="results-section">
+            <div class="result-header">
+                {% if result.prediction == 'bad' %}
+                <div class="result-icon danger">⚠️</div>
+                {% else %}
+                <div class="result-icon safe">✓</div>
+                {% endif %}
+                <div>
+                    <h2 class="result-title">{{ result.result }}</h2>
+                    <p class="result-url">{{ result.url }}</p>
+                </div>
+            </div>
+
+            <div class="result-details">
+                <div class="detail-item">
+                    <div class="detail-label">Confidence</div>
+                    <div class="detail-value">{{ "%.1f"|format(result.confidence) }}%</div>
+                </div>
+                {% if result.ssl_valid is not none %}
+                <div class="detail-item">
+                    <div class="detail-label">SSL Valid</div>
+                    <div class="detail-value">{{ "Yes" if result.ssl_valid else "No" }}</div>
+                </div>
+                {% endif %}
+                {% if result.domain_age %}
+                <div class="detail-item">
+                    <div class="detail-label">Domain Age</div>
+                    <div class="detail-value">{{ result.domain_age }} days</div>
+                </div>
+                {% endif %}
+                {% if result.vt_report %}
+                <div class="detail-item">
+                    <div class="detail-label">VirusTotal</div>
+                    <div class="detail-value">Malicious: {{ result.vt_report.malicious }}, Suspicious: {{ result.vt_report.suspicious }}, Harmless: {{ result.vt_report.harmless }}</div>
+                </div>
+                {% endif %}
+                {% if result.reasons %}
+                <div class="detail-item">
+                    <div class="detail-label">Reasons</div>
+                    <div class="detail-value">
+                        {% for reason in result.reasons %}
+                        {{ reason }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if result.error %}
+                <div class="detail-item">
+                    <div class="detail-label">Error</div>
+                    <div class="detail-value">{{ result.error }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if error %}
+        <div class="results-section">
+            <div class="result-header">
+                <div class="result-icon danger">❌</div>
+                <div>
+                    <h2 class="result-title" style="color: #f44336;">Error</h2>
+                    <p class="result-url">{{ error }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        © 2025 PhishGuard — built by you.
+    </footer>
+
+    <script>
+        function clearInput() {
+            document.querySelector('.url-input').value = '';
+        }
+
+        function exportResults() {
+            const resultsSections = document.querySelectorAll('.results-section');
+            if (resultsSections.length === 0) {
+                alert('No results to export. Please analyze some URLs first.');
+                return;
+            }
+
+            let csvContent = 'URL,Prediction,Confidence,SSL Valid,Domain Age (days),VirusTotal Malicious,VirusTotal Suspicious,VirusTotal Harmless,Reasons\n';
+
+            resultsSections.forEach(section => {
+                const urlElement = section.querySelector('.result-url');
+                const titleElement = section.querySelector('.result-title');
+                const confidenceElement = section.querySelector('.detail-value');
+
+                if (!urlElement || !titleElement) return;
+
+                const url = urlElement.textContent.trim();
+                const title = titleElement.textContent.trim();
+                const prediction = title.includes('Phishing') ? 'Phishing' : title.includes('healthy') ? 'Safe' : 'Unknown';
+
+                // Find confidence
+                let confidence = '';
+                const detailItems = section.querySelectorAll('.detail-item');
+                detailItems.forEach(item => {
+                    const label = item.querySelector('.detail-label');
+                    const value = item.querySelector('.detail-value');
+                    if (label && label.textContent.includes('Confidence')) {
+                        confidence = value.textContent.trim();
+                    }
+                });
+
+                // Find other details
+                let sslValid = '', domainAge = '', vtMalicious = '', vtSuspicious = '', vtHarmless = '', reasons = '';
+
+                detailItems.forEach(item => {
+                    const label = item.querySelector('.detail-label');
+                    const value = item.querySelector('.detail-value');
+                    if (label && value) {
+                        const labelText = label.textContent.trim();
+                        const valueText = value.textContent.trim();
+                        if (labelText === 'SSL Valid') {
+                            sslValid = valueText;
+                        } else if (labelText === 'Domain Age') {
+                            domainAge = valueText.replace(' days', '');
+                        } else if (labelText === 'VirusTotal') {
+                            const parts = valueText.split(', ');
+                            vtMalicious = parts[0].split(': ')[1] || '';
+                            vtSuspicious = parts[1].split(': ')[1] || '';
+                            vtHarmless = parts[2].split(': ')[1] || '';
+                        } else if (labelText === 'Reasons') {
+                            reasons = valueText.replace(/, /g, '; ');
+                        }
+                    }
+                });
+
+                csvContent += `"${url}","${prediction}","${confidence}","${sslValid}","${domainAge}","${vtMalicious}","${vtSuspicious}","${vtHarmless}","${reasons}"\n`;
+            });
+
+            // Create and download the CSV file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'phishing_analysis_results.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>
