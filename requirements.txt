@@ -8,3 +8,5 @@ requests==2.31.0
 python-whois==0.8.0
 virustotal-python==1.0.1
 Werkzeug==2.3.7
+setuptools>=65.0.0
+wheel
